@@ -1,7 +1,10 @@
-# GEONU
-Geoneutrinos are subatomic, fundamental particles that are produced by the radioactive -decay of Heat Producing Elements (HPEs) within the Earth’s interior. Geoscientists are particularly interested in the abundance and distribution of geoneutrinos produced by uranium (U), thorium (Th), and potassium (K) because they are long-lived radionuclides, preserving a record of Earth’s core-mantle thermal evolution. 
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=Teiglin14/GEONU)  \
+To open this repository in your web browser and begin using immediately without need of download
 
-This repository hosts the work-in-progress development environment for a user-friendly version of the code used to calculate geoneutrino flux. Each section of the .mlx main GEONU file contains description and explanation, and some also have interactive controls for changing model input values. 
+# GEONU
+Geoneutrinos are subatomic, fundamental particles that are produced by the radioactive -decay of Heat Producing Elements (HPEs) within the Earth’s interior. Geoscientists are particularly interested in the abundance and distribution of geoneutrinos produced by uranium (U), thorium (Th), and potassium (K) because they are long-lived radionuclides, preserving a record of Earth’s core-mantle thermal evolution. \
+
+This repository hosts the work-in-progress development environment for a user-friendly version of the code used to calculate geoneutrino flux. Each section of the .mlx main GEONU file contains description and explanation, and some also have interactive controls for changing model input values. \
 
 # Version
 ## v0_1
@@ -16,6 +19,3 @@ Repository authors: Tytrice Faison, Laura Sammon\
 Code authors: Yu Huang, Scott Wipperfurth, William McDonough, Laura Sammon, Tytrice Faison
 
 # Citations
-
-
-[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=Teiglin14/GEONU)
