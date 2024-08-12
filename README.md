@@ -16,3 +16,6 @@ Repository authors: Tytrice Faison, Laura Sammon\
 Code authors: Yu Huang, Scott Wipperfurth, William McDonough, Laura Sammon, Tytrice Faison
 
 # Citations
+
+
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=Teiglin14/GEONU)
