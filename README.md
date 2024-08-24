@@ -1,4 +1,4 @@
-[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=LSKgeo/GEONU&file=GEONU_v0_1.mlx) \
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=LSKgeo/GEONU&file=GEONUMainMenu.mlapp) \
 To open this repository in your web browser and begin using immediately without need of download
 
 # GEONU
