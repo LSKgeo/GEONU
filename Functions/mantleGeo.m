@@ -365,40 +365,40 @@ end % end of "if geo = 1"
     variables. 
     %}
     
-    method = 4; %1 = calculate median +-68% c.l.
+    method1 = 4; %1 = calculate median +-68% c.l.
     % - Mass (kg)
     if s2.calcMantleLayered == true
-        abund_stat_dm.mass.mass = stat(sum(mass1(1:end-1)),method); %need 1x3 matrix
-        abund_stat_em.mass.mass = stat(mass1(end),method);
+        abund_stat_dm.mass.mass = stat(sum(mass1(1:end-1)),method1); %need 1x3 matrix
+        abund_stat_em.mass.mass = stat(mass1(end),method1);
     else
-        abund_stat_dm.mass.mass = stat(sum(mass1),method);
+        abund_stat_dm.mass.mass = stat(sum(mass1),method1);
         abund_stat_em.mass.mass = [0,0,0];  %output is expecting a 1x3 array
     end
     
     % For the below, if calcMantleLayered == false, then the stats for em will be 0
     % - Abundance mass (kg) - 
-    abund_stat_dm.mass.U   = stat(abund_mass(:,1),method); 
-    abund_stat_dm.mass.Th  = stat(abund_mass(:,2),method);
-    abund_stat_dm.mass.K = stat(abund_mass(:,2),method)/.00011959; %kg K
+    abund_stat_dm()  = abund_mass(:,1); % U mass
+    abund_stat_dm()  = abund_mass(:,2); % Th mass
+    abund_stat_dm() = abund_mass(:,2),method1)/.00011959; %kg K
     
-    abund_stat_em.mass.U   = stat(abund_mass(:,4),method); 
-    abund_stat_em.mass.Th  = stat(abund_mass(:,5),method);
-    abund_stat_em.mass.K = stat(abund_mass(:,6),method)/.00011959; %kg K
+    abund_stat_em.mass.U   = stat2(abund_mass(:,4),method1); 
+    abund_stat_em.mass.Th  = stat2(abund_mass(:,5),method1);
+    abund_stat_em.mass.K = stat2(abund_mass(:,6),method1)/.00011959; %kg K
         
     %- Heat (W)
-    abund_stat_dm.hp.U = stat(heat.U.dm,method); 
-    abund_stat_dm.hp.Th = stat(heat.Th.dm,method); 
-    abund_stat_dm.hp.K = stat(heat.K.dm,method); 
-    abund_stat_dm.hp.total = stat(heat.total.dm,method); 
+    abund_stat_dm.hp.U = stat(heat.U.dm,method1); 
+    abund_stat_dm.hp.Th = stat(heat.Th.dm,method1); 
+    abund_stat_dm.hp.K = stat(heat.K.dm,method1); 
+    abund_stat_dm.hp.total = stat(heat.total.dm,method1); 
     
-    abund_stat_em.hp.U = stat(heat.U.em,method); 
-    abund_stat_em.hp.Th = stat(heat.Th.em,method); 
-    abund_stat_em.hp.K = stat(heat.K.em,method); 
-    abund_stat_em.hp.total = stat(heat.total.em,method); 
+    abund_stat_em.hp.U = stat(heat.U.em,method1); 
+    abund_stat_em.hp.Th = stat(heat.Th.em,method1); 
+    abund_stat_em.hp.K = stat(heat.K.em,method1); 
+    abund_stat_em.hp.total = stat(heat.total.em,method1); 
     
     %- Heat flow (W/m2)
-    abund_stat_dm.hf = stat(heatflow.dm,method); 
-    abund_stat_em.hf = stat(heatflow.em,method); 
+    abund_stat_dm.hf = stat(heatflow.dm,method1); 
+    abund_stat_em.hf = stat(heatflow.em,method1); 
 
     
 
@@ -492,11 +492,11 @@ if s2.calcFlux == true
    %}
    % Record Stats about Flux
    for i = 1:length(s2.energy)
-       flux_stat_dm.U238  = stat(sum(flux_U238.dm,2),method); 
-       flux_stat_em.U238  = stat(sum(flux_U238.em,2),method); 
+       flux_stat_dm.U238  = stat(sum(flux_U238.dm,2),method1); 
+       flux_stat_em.U238  = stat(sum(flux_U238.em,2),method1); 
 
-       flux_stat_dm.Th232 = stat(sum(flux_Th232.dm,2),method);
-       flux_stat_em.Th232 = stat(sum(flux_Th232.em,2),method);
+       flux_stat_dm.Th232 = stat(sum(flux_Th232.dm,2),method1);
+       flux_stat_em.Th232 = stat(sum(flux_Th232.em,2),method1);
    end
 end
          

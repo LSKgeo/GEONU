@@ -11,7 +11,7 @@ function [dist] = randist(mu,error,int,locate)
 %
 %   locate = "single value" will return the random number at "locate"
 %       location on the distribution. This is used to provide correlated 
-%       values betwen creation of different distributions. If locate is a
+%       values between creation of different distributions. If locate is a
 %       distribution it should be a uniform distribution (i.e. built using
 %       the RANDN function, not RAND). 'locate' = 0 will return mu, while 
 %       'locate' = 1 will return (5+3) = 8. 

@@ -1,4 +1,4 @@
-function mass = voxMass(surfRadius,depth,thickness,rho,latbot,lattop,lonleft,lonright)
+function [mass,vol ] = voxMass(surfRadius,depth,thickness,rho,latbot,lattop,lonleft,lonright)
 % VOXMASS calculates the mass of a voxel bounded by latbot,lattop,lonleft,
 % lonright, which are IN DEGREES and some thickness.  surfRadius is the 
 % radius to the surface of the earth (at that cell in m)), depth is the 
@@ -26,8 +26,8 @@ lonleft = (lonleft + 180) * pi/180;
 lonright = (lonright + 180) * pi/180;
 
 
-r1 = surfRadius - (depth + (0.5.*thickness)); % top Radius (m)
-r2 = surfRadius - (depth - (0.5.*thickness)); % bottom Radius (m)
+r1 = surfRadius - (depth + (0.5.*thickness)); % bottom Radius (m)
+r2 = surfRadius - (depth - (0.5.*thickness)); % top Radius (m)
 
 a = 1/3;
 vol = ((a*r2.^3) - (a*r1.^3)).*(-cos(lattop) + cos(latbot)).*(lonright-lonleft); %m3

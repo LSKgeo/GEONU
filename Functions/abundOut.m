@@ -1,4 +1,5 @@
 function abundance = abundOut(center,Vp,param,correl_SiO2,correl_abund)
+% amph.U.fit.param
 % ABUNDOUT will return a value of "X" based on the probability of each X 
 % value as defined by "P".  Thus X and P need to be the same length. See 
 % this link for more information:
@@ -16,12 +17,9 @@ function abundance = abundOut(center,Vp,param,correl_SiO2,correl_abund)
 
 % - Find index of closest bin for Vp - 
 for i = 1:length(center)
-[~,index(i,1)] = min(abs(center(i,:)-Vp(i)));
-P(i,1) = correl_SiO2(i,index(i));  % extract probability of SiO2 for "index" Vp bin
-
+    [~,index(i,1)] = min(abs(center(i,:)-Vp(i)));
+    P(i,1) = correl_SiO2(i,index(i));  % extract probability of SiO2 for "index" Vp bin
 end
-
-%P = correl_SiO2(1,index);  % extract probability of SiO2 for "index" Vp bin THIS WAS USED WHEN WE DID THIS IN A LOOP
 
 
 % -- Calculate abundance from extracted log-normal parameters -- (exp brings into normal space)
@@ -29,6 +27,6 @@ m = exp(param(P,1));
 eplus = exp(param(P,1)+param(P,2)); % convert log-values to normal
 eminus = exp(param(P,1)-param(P,2));
 
-abundance = logdist(m,eplus,eminus,0,correl_abund); 
+abundance = logdist(m,eplus,eminus,0,correl_abund); % this can be changed to just a MATLAB code
 %abundance = exp(randist(param(a,1),param(a,2),0,correl)); 
 
