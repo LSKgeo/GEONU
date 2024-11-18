@@ -1,6 +1,6 @@
 function [abund_stat_dm,abund_sums_dm,flux_stat_dm,flux_sums_dm,flux_count_dm,...
     abund_stat_em,abund_sums_em,flux_stat_em,flux_sums_em,flux_count_em]...
-    = mantleGeo(LAB,lat,lon,aU,aTh,aK40,detector,SurfRadius,PREM,s2)
+    = mantleGeo2(iter,LAB,lat,lon,aU,aTh,aK40,detector,SurfRadius,PREM,s2,distpath,thick,depth1)
 
 % MANTLE discretizes the mantle column beneath the 1x1 degree cell defined
 % by lat and lon. The code splits the column into smaller voxels depending
@@ -36,7 +36,7 @@ function [abund_stat_dm,abund_sums_dm,flux_stat_dm,flux_sums_dm,flux_count_dm,..
     CMB_depth = 2891*1e3; % (m) Core Mantle Boundary (CMB) depth
 
 % -- Define Flux parameters -- 
-    det = detector(1,:); clear detector% lon2, latidude, SurfRadius (m)
+    det = detector(1,:); % lon2, latidude, SurfRadius (m)
 
     % - Preallocate variables -
         % for "flux_" variables, NEED to use "zeros" not "nan", otherwise wont sum together
@@ -65,41 +65,50 @@ function [abund_stat_dm,abund_sums_dm,flux_stat_dm,flux_sums_dm,flux_count_dm,..
 % thickness later as integer thicknesses, I can just sum up the masses. 
 % The PREM variable is defined from 1:2891, so PREM(100,3) is the density
 % at 100 km depth. 
+% k = 1;
+% LAB = GeoPhys.LAB(k);
+% CMB_depth = 2891*1e3; % (m) Core Mantle Boundary (CMB) depth
+% SurfRadius = GeoPhys.r(k);
+% lat = GeoPhys.latlon(k,2);
+% lon = GeoPhys.latlon(k,1);
+
     layers.depth = LAB+500:1000:(CMB_depth-500); %(m) center of each 1km thick layer
     layers.depth = layers.depth'; 
-    for i = 1:length(layers.depth)
-        layers.mass(i,1) = voxMass(SurfRadius,layers.depth(i),1000,PREM(round(layers.depth(i)/1000+0.5),3),lat-0.5,lat+0.5,lon-0.5,lon+0.5); %kg
-        layers.vol(i,1) = layers.mass(i)/PREM(round(layers.depth(i)/1000+500),3); %(m)
-    end
+    % THESE LINES TAKE THE LONGEST
+    %for i = 1:length(layers.depth)
+        layers.mass(:,1) = voxMass(SurfRadius,layers.depth,1000,PREM(round(layers.depth/1000+0.5),3),lat-0.5,lat+0.5,lon-0.5,lon+0.5); %kg
+        layers.vol(:,1) = layers.mass./PREM(round(layers.depth/1000+500),3); %(m)
+   % end
+
     
 % -- Calculate mantle thickness --
-    thick_man = layers.depth(end)+500 - LAB; %(m)
+    %thick_man = layers.depth(end)+500 - LAB; %(m)
     
 % -- Define thickness of arbitrary mantle layers --
-    if s2.calcMantleLayered == true %Enriched and Depleted Mantle
-        % Assign arbitrary layer thicknesses. The last layer we will calculate
-        % the remaineder after we assign 750km to the Enriched Mantle (~19%
-        % mass of mantle (see Arevalo et al. 2013). As 'thick' is defined we
-        % will never have a negative last layer (largest LAB depth is 320km). 
-        thick = [50,100,150,250,400,400,400,0]; % (km) thickness of layers (arbitrary) 
-        thick(end+1) = 750; %=Enriched Mantle Thickness
-        thick(end-1) = thick_man/1000 - sum(thick); %thickness of last DM layer = remainder
-        thick = thick*1000;
-
-    else %entire mantle = depleted
-
-        % -- Calculate depth and thickness of each layer (~10 layers initial) --
-        thick = [50,100,150,250,500,500,500,500]; % (km) thickness of layers (arbitrary) 
-        thick(end+1) = thick_man/1000 - sum(thick); %thickness of last layer = remainder
-        thick = thick*1000; %(m)
-    end
+    % if s2.calcMantleLayered == true %Enriched and Depleted Mantle
+    %     % Assign arbitrary layer thicknesses. The last layer we will calculate
+    %     % the remaineder after we assign 750km to the Enriched Mantle (~19%
+    %     % mass of mantle (see Arevalo et al. 2013). As 'thick' is defined we
+    %     % will never have a negative last layer (largest LAB depth is 320km). 
+    %     thick = [50,100,150,250,400,400,400,0]; % (km) thickness of layers (arbitrary) 
+    %     thick(end+1) = 750; %=Enriched Mantle Thickness
+    %     thick(end-1) = thick_man/1000 - sum(thick); %thickness of last DM layer = remainder
+    %     thick = thick*1000;
+    % 
+    % else %entire mantle = depleted
+    % 
+    %     % -- Calculate depth and thickness of each layer (~10 layers initial) --
+    %     thick = [50,100,150,250,500,500,500,500]; % (km) thickness of layers (arbitrary) 
+    %     thick(end+1) = thick_man/1000 - sum(thick); %thickness of last layer = remainder
+    %     thick = thick*1000; %(m)
+    % end
 
 
 % -- Calculate depth to center of each arbitrary layer --
-    depth1 = thick(1)/2+LAB; %first depth
-    for i = 2:length(thick)
-       depth1(i) = thick(i)/2 + depth1(i-1)+thick(i-1)/2;  % depth to center of layers
-    end
+    % depth1 = thick(1)/2+LAB; %first depth
+    % for i = 2:length(thick)
+    %    depth1(i) = thick(i)/2 + depth1(i-1)+thick(i-1)/2;  % depth to center of layers
+    % end
 
 
 % -- Calculate mass (sum masses from layers.mass) -- (kg) 
@@ -187,27 +196,27 @@ new voxels.
     grid.num = [4000,15000,25000,40000,60000]; %[15000,20000,50000,100000,150000]; %(m) ~size of grid cells  [3000,5000,10000,50000,90000]
     grid.lim = [100000,160000,280000,600000,1000000]; %(m) distance from detector for each grid size
      
-    distpath = dis(lon,lat,det,SurfRadius,depth1(n)); %(m) 
+    %distpath = dis(lon,lat,det,SurfRadius,depth1(n)); %(m) 
 
 
-if distpath > grid.lim(5)
+if distpath(n) > grid.lim(5)
     % - Do not grid cells and calculate geoneutrino flux -
     % We will do all iterations at once
     
     %[mass2,~] = fluxGrid(s1.lon,s1.lat,1,1,depth,thick,rho,SurfRadius,det); 
     
-       p1 = 1 - s2.pee.p1 .* sin(1.27.*abs(s2.pee.delm21)*bsxfun(@rdivide,distpath,s2.energy')).^2; 
-       p2 = s2.pee.p2 .* sin(1.27.*abs(s2.pee.delm32n).*bsxfun(@rdivide,distpath,s2.energy')).^2;
-       p3 = s2.pee.p3 .* sin(1.27.*abs(s2.pee.delm32i).*bsxfun(@rdivide,distpath,s2.energy')).^2;
+       p1 = 1 - s2.pee.p1 .* sin(1.27.*abs(s2.pee.delm21)*bsxfun(@rdivide,distpath(n),s2.energy')).^2; 
+       p2 = s2.pee.p2 .* sin(1.27.*abs(s2.pee.delm32n).*bsxfun(@rdivide,distpath(n),s2.energy')).^2;
+       p3 = s2.pee.p3 .* sin(1.27.*abs(s2.pee.delm32i).*bsxfun(@rdivide,distpath(n),s2.energy')).^2;
     
-    geoResponse = mass1(n)./(4*pi*distpath.^2); 
+    geoResponse = mass1(n)./(4*pi*distpath(n).^2); 
     
     unityFlux  = bsxfun(@times,(p1-p2-p3),geoResponse); %kgU/m2 (flux assuming unity concentration)
     
     temp_flux(:,:,n) = unityFlux; 
     
             % - Record Flux vs Distance (for plotting) -
-            [~,index] = min(abs(bsxfun(@minus,distpath,centers)),[],2);
+            [~,index] = min(abs(bsxfun(@minus,distpath(n),centers)),[],2);
             dist_count(index,:,n) = dist_count(index,:,n) + unityFlux;     
     
     %{
@@ -231,15 +240,15 @@ if distpath > grid.lim(5)
 else % Splits the cell into smaller voxels 
     
             % - Calculate lon2 interval -  
-    if distpath <= grid.lim(1)
+    if distpath(n) <= grid.lim(1)
             num = grid.num(1); % num = desired cell size
-        elseif distpath > grid.lim(1) && distpath <= grid.lim(2)
+        elseif distpath(n) > grid.lim(1) && distpath(n) <= grid.lim(2)
             num = grid.num(2);
-        elseif distpath > grid.lim(2) && distpath <= grid.lim(3)
+        elseif distpath(n) > grid.lim(2) && distpath(n) <= grid.lim(3)
             num = grid.num(3);
-        elseif distpath > grid.lim(3) && distpath <= grid.lim(4)
+        elseif distpath(n) > grid.lim(3) && distpath(n) <= grid.lim(4)
             num = grid.num(4);
-        elseif distpath > grid.lim(4) && distpath <= grid.lim(5)
+        elseif distpath(n) > grid.lim(4) && distpath(n) <= grid.lim(5)
             num = grid.num(5); 
     end  
     
@@ -357,48 +366,45 @@ end % end of "if geo = 1"
     %{ 
     This information is median and +- information for the entire 
     distribution, requiring it to be outside the loop. Calculate statistics
-    using "stat" function (created function). 
-
-    I realize putting everything into a single array like "abund_stat" is
-    rediculous, but "parfor" doesn't support structures.  This is the best
-    way to have a cleaner code/output without having 10 different
-    variables. 
+    using "stat" function (created function).  
     %}
+
+    abund_stat_dm = zeros(iter,9); 
+    abund_stat_em= zeros(iter,9); 
     
-    method1 = 4; %1 = calculate median +-68% c.l.
     % - Mass (kg)
     if s2.calcMantleLayered == true
-        abund_stat_dm.mass.mass = stat(sum(mass1(1:end-1)),method1); %need 1x3 matrix
-        abund_stat_em.mass.mass = stat(mass1(end),method1);
+        abund_stat_dm(:,1) = sum(mass1(1:end-1)); 
+        abund_stat_em(:,1) = mass1(end);
     else
-        abund_stat_dm.mass.mass = stat(sum(mass1),method1);
-        abund_stat_em.mass.mass = [0,0,0];  %output is expecting a 1x3 array
+        abund_stat_dm(:,1) = sum(mass1);
+        abund_stat_em(:,1) = zeros(iter,1);  %
     end
     
     % For the below, if calcMantleLayered == false, then the stats for em will be 0
     % - Abundance mass (kg) - 
-    abund_stat_dm()  = abund_mass(:,1); % U mass
-    abund_stat_dm()  = abund_mass(:,2); % Th mass
-    abund_stat_dm() = abund_mass(:,2),method1)/.00011959; %kg K
+    abund_stat_dm(:,2)  = abund_mass(:,1); % U mass
+    abund_stat_dm(:,3)  = abund_mass(:,2); % Th mass
+    abund_stat_dm(:,4) = abund_mass(:,2)/.00011959; %kg K
     
-    abund_stat_em.mass.U   = stat2(abund_mass(:,4),method1); 
-    abund_stat_em.mass.Th  = stat2(abund_mass(:,5),method1);
-    abund_stat_em.mass.K = stat2(abund_mass(:,6),method1)/.00011959; %kg K
+    abund_stat_em(:,2)   = abund_mass(:,4); % U mass
+    abund_stat_em(:,3)  = abund_mass(:,5); % Th mass
+    abund_stat_em(:,4) = abund_mass(:,6)/.00011959; %kg K
         
     %- Heat (W)
-    abund_stat_dm.hp.U = stat(heat.U.dm,method1); 
-    abund_stat_dm.hp.Th = stat(heat.Th.dm,method1); 
-    abund_stat_dm.hp.K = stat(heat.K.dm,method1); 
-    abund_stat_dm.hp.total = stat(heat.total.dm,method1); 
+    abund_stat_dm(:,5) = heat.U.dm; 
+    abund_stat_dm(:,6) = heat.Th.dm; 
+    abund_stat_dm(:,7) = heat.K.dm; 
+    abund_stat_dm(:,8) = heat.total.dm; 
     
-    abund_stat_em.hp.U = stat(heat.U.em,method1); 
-    abund_stat_em.hp.Th = stat(heat.Th.em,method1); 
-    abund_stat_em.hp.K = stat(heat.K.em,method1); 
-    abund_stat_em.hp.total = stat(heat.total.em,method1); 
+    abund_stat_em(:,5) = heat.U.em; 
+    abund_stat_em(:,6) = heat.Th.em; 
+    abund_stat_em(:,7) = heat.K.em; 
+    abund_stat_em(:,8) = heat.total.em; 
     
     %- Heat flow (W/m2)
-    abund_stat_dm.hf = stat(heatflow.dm,method1); 
-    abund_stat_em.hf = stat(heatflow.em,method1); 
+    abund_stat_dm(:,9) = heatflow.dm; 
+    abund_stat_em(:,9) = heatflow.em; 
 
     
 
@@ -492,11 +498,11 @@ if s2.calcFlux == true
    %}
    % Record Stats about Flux
    for i = 1:length(s2.energy)
-       flux_stat_dm.U238  = stat(sum(flux_U238.dm,2),method1); 
-       flux_stat_em.U238  = stat(sum(flux_U238.em,2),method1); 
+       flux_stat_dm.U238  = sum(flux_U238.dm,2); 
+       flux_stat_em.U238 = sum(flux_U238.em,2); 
 
-       flux_stat_dm.Th232 = stat(sum(flux_Th232.dm,2),method1);
-       flux_stat_em.Th232 = stat(sum(flux_Th232.em,2),method1);
+       flux_stat_dm.Th232 = sum(flux_Th232.dm,2);
+       flux_stat_em.Th232 = sum(flux_Th232.em,2);
    end
 end
          
