@@ -1,43 +1,8 @@
 function [simple2, E_int, sigma, weak] = nuOscParam(simple2)
-
 % this is just a simple cut and paste of the original script that loads and
 % defines isotope heat production info and geoneutrino oscillation
 % parameters. It was put into a function to shorten the main script, but as
 % of now requires no inputs.
-
-%    % Isotope information (hp, mass, molar ratio)
-% % Define heat Production from kg of isotope (McDonough et al., 2020)
-%     simple2.hp.U238 = 94.936*10^-6;  %(Watt/kg)
-%     simple2.hp.U235 = 561.65*10^-6; %(Watt/kg)
-%     simple2.hp.U    = 98.293*10^-6;  %(Watt/kg)
-%     simple2.hp.Th   = 26.180*10^-6;  %(Watt/kg)
-%     simple2.hp.K40  = 29.029*10^-6;  %(Watt/kg) K40, not K
-% 
-% % Define isotope parameters
-% % Molar ratios from Chart of Nuclides (National Nuclear Data Center). Isotope masses from Table of Nuclides 
-%     % (Nuclear Data Center at KAERI). Avogadro's Number from NIST.
-% 
-%     % - Molar Ratio - 
-%     simple2.iso.molar.U238  = 0.992740; 
-%     simple2.iso.molar.U235  = 1 - simple2.iso.molar.U238;
-%     simple2.iso.molar.Th232 = 1.00; 
-%     simple2.iso.molar.K40   = 0.0001167; % mass ratio = 0.000112
-% 
-%     % - Isotope Mass - (amu)
-%     simple2.iso.amu.U238  = 238.0507826; 
-%     simple2.iso.amu.U235  = 235.0439231;
-%     simple2.iso.amu.Th232 = 232.0380504; 
-%     simple2.iso.amu.K40   = 39.9639987; 
-%     simple2.iso.amu.amuKg = 1.660539040*10^-27;
-% 
-%     % - Avogadro's Number - (atom/mole)
-%     simple2.iso.avgd = 6.022140857*10^23; % http://physics.nist.gov/cgi-bin/cuu/Value?na    
-% 
-%     % - Decay constant - %(/s)
-%     simple2.iso.dc.U238  = log(2)/(4.4683e9*3.15569e7);  %(/s)
-%     simple2.iso.dc.U235  = log(2)/(0.70348e9*3.15569e7); %(/s) 
-%     simple2.iso.dc.Th232 = log(2)/(14.1e9*3.15569e7);   %(/s)
-%     simple2.iso.dc.K40   = log(2)/(1.262e9*3.15569e7);   %(/s)
 
     % Antineutrino parameters 
     % Oscillation, spectrum, cross-section

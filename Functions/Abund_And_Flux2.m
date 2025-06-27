@@ -219,7 +219,7 @@ end
         % see "help voxMass". Function finds volume of
         % 3d spherical trapezoid then multiplies by density. 
         % SurfRadius is surface radius, depth is to center of layer, thick is thickness of layer
-    mass = voxMass(SurfRadius,depth,thick,rho,latbot,lattop,lonleft,lonright);   
+    mass = voxMass(SurfRadius,depth,thick,rho,latbot,lattop,lonleft,lonright,iter);   
     
     
 % -- Calculate Pressure from this cell -- (MPa)
