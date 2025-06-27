@@ -7,12 +7,8 @@ Geoneutrinos are subatomic, fundamental particles that are produced by the radio
 This repository hosts the work-in-progress development environment for a user-friendly version of the code used to calculate geoneutrino flux. Each section of the .mlx main GEONU file contains description and explanation, and some also have interactive controls for changing model input values.
 
 # Version
-## v0_2
+## v1_0
 This version will run standard geoneutrino flux calculations to completion for one of six detectors (Borexino, KamLAND, SNO+, JUNO, CJPL, and Hawaii). The "Visualizing the Results" section has not yet been developed. The code has been mildly optimized but will likely incorporate more changes to its subfunctions in the future.
-
-# UX Feedback Form
-We are collecting feedback on the usability of this program here: https://forms.gle/rDo22zKzBWCxtKSW9 \
-This form will be updated with more specific questions in the near future.
 
 # Authors
 Repository authors: Tytrice Faison, Laura Sammon\
